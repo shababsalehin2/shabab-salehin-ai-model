@@ -614,6 +614,7 @@
   const BACKEND_URL = 'https://shabab-ai-backend.onrender.com/chat';
   // Example: 'https://shabab-ai-backend.onrender.com/chat'
 
+  let shouldAutoScroll = true;
   let history = [];
   let isLoading = false;
 
@@ -630,6 +631,24 @@
       sendMessage();
     }
   }
+
+  // 🔥 Warm-up ping (runs when page loads)
+    window.addEventListener('load', () => {
+      fetch('https://shabab-ai-backend.onrender.com/')
+        .then(() => console.log('✅ Backend warmed up'))
+        .catch(() => console.log('⚠️ Backend wake-up failed'));
+    });
+
+    const chatArea = document.getElementById('chatArea');
+
+      chatArea.addEventListener('scroll', () => {
+        const threshold = 100;
+
+        const isNearBottom =
+          chatArea.scrollHeight - chatArea.scrollTop - chatArea.clientHeight < threshold;
+
+        shouldAutoScroll = isNearBottom;
+      });
 
   /* ── QUICK CHIP SEND ── */
   function quickSend(text) {
@@ -788,10 +807,9 @@
           i++;
 
           // 🔥 Auto scroll while typing
-          area.scrollTo({
-            top: area.scrollHeight,
-            behavior: 'smooth'
-          });
+          if (shouldAutoScroll) {
+            area.scrollTop = area.scrollHeight;
+          }
 
           setTimeout(typing, speed);
         }
@@ -815,7 +833,11 @@
 
     const av = document.createElement('div');
     av.className = 'av bot';
-    av.textContent = 'SS';
+    // av.textContent = '<img src="shababai-bot.jpg" />';
+    const img = document.createElement('img');
+    img.src = 'shababai-bot.jpg';
+    img.alt = 'AI';
+    av.appendChild(img);
 
     const bubble = document.createElement('div');
     bubble.className = 'typing-bubble';
@@ -824,7 +846,9 @@
     row.appendChild(av);
     row.appendChild(bubble);
     area.appendChild(row);
-    area.scrollTop = area.scrollHeight;
+    if (shouldAutoScroll) {
+      area.scrollTop = area.scrollHeight;
+    }
     return row;
   }
 

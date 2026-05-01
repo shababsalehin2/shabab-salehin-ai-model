@@ -860,8 +860,10 @@
 
     const av = document.createElement('div');
     av.className = 'av bot';
-    av.textContent = 'SS';
-
+    const img = document.createElement('img');
+    img.src = 'shababai-bot.jpg';
+    img.alt = 'AI';
+    av.appendChild(img);
     const bubble = document.createElement('div');
     bubble.className = 'error-bubble';
     bubble.textContent = '⚠️ ' + msg;
